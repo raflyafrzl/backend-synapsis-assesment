@@ -21,4 +21,4 @@ CREATE TABLE shopping_cart
 );
 
 INSERT INTO products(id, product_name, category, price) values('abcdefg', 'Dino', 'mainan' , 130000),
-                                                              ('asasadd','Permen', 'makanan', 25000)
+                                                              ('asasadd','Permen', 'makanan', 25000);

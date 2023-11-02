@@ -27,7 +27,9 @@ func main() {
 	var customerService contract.CustomerUseCase = usecase.NewCustomerUseCase(&customerRepository)
 	var customerController *delivery.CustomerController = delivery.NewCustomerController(&customerService)
 
-	var productController *delivery.ProductController = delivery.NewProductController()
+	var productRepository contract.ProductRepository = repository.NewProductRepository(db)
+	var productUseCase contract.ProductUseCase = usecase.NewProductUseCase(&productRepository)
+	var productController *delivery.ProductController = delivery.NewProductController(&productUseCase)
 
 	r := chi.NewRouter()
 	r.Use(middlewares.RecoveryMiddleware)
