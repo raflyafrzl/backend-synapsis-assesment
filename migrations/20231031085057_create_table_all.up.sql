@@ -10,7 +10,7 @@ CREATE TABLE customers
 (
     id       varchar(8) PRIMARY KEY,
     username varchar (15) NOT NULL,
-    password varchar(30) NOT NULL
+    password TEXT NOT NULL
 );
 
 CREATE TABLE shopping_cart
@@ -19,3 +19,6 @@ CREATE TABLE shopping_cart
     products_id varchar(8) REFERENCES products (id),
     user_id     varchar(8) REFERENCES customers (id)
 );
+
+INSERT INTO products(id, product_name, category, price) values('abcdefg', 'Dino', 'mainan' , 130000),
+                                                              ('asasadd','Permen', 'makanan', 25000)

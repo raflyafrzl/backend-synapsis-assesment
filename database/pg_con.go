@@ -7,7 +7,8 @@ import (
 	"time"
 )
 
-func NewInitDB() *gorm.DB {
+func NewInitDB(dsn string) *gorm.DB {
+
 	db, err := gorm.Open(postgres.Open(os.Getenv("DATA_SOURCE_NAME")), &gorm.Config{})
 
 	if err != nil {

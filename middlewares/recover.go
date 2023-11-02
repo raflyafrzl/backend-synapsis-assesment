@@ -3,11 +3,8 @@ package middlewares
 import (
 	"encoding/json"
 	"net/http"
-	"synapsis-test-be/database"
 	"synapsis-test-be/model"
 )
-
-var db = database.NewInitDB()
 
 func RecoveryMiddleware(han http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

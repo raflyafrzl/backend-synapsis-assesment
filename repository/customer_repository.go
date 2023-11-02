@@ -5,6 +5,7 @@ import (
 	"gorm.io/gorm"
 	"synapsis-test-be/contract"
 	"synapsis-test-be/entities"
+	"synapsis-test-be/utilities"
 )
 
 type customerRepository struct {
@@ -28,13 +29,24 @@ func (c *customerRepository) FindAll(ctx context.Context) ([]entities.UserEntity
 
 }
 
-func (c *customerRepository) Create(ctx context.Context, payload entities.UserEntity) (entities.UserEntity, error) {
+func (c *customerRepository) Create(ctx context.Context, payload entities.UserEntity) error {
 	var err error
 
 	err = c.db.Table("customers").WithContext(ctx).Create(payload).Error
 
 	if err != nil {
-		return entities.UserEntity{}, err
+		return err
 	}
-	return payload, nil
+	return nil
+}
+
+func (c *customerRepository) FindOne(ctx context.Context, payload string) (entities.UserEntity, error) {
+
+	var result entities.UserEntity
+	err := c.db.Table("customers").WithContext(ctx).Where("id=? OR username=?", payload, payload).Find(&result).Error
+
+	utilities.ErrorResponseWeb(err, 500)
+
+	return result, nil
+
 }
