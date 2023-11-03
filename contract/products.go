@@ -11,6 +11,8 @@ type ProductUseCase interface {
 	FindByCategory(category string) []entities.ProductEntity
 	AddToCart(payload model.AddCartModel) entities.Cart
 	FindByUserId(userId string) []entities.Cart
+	DeleteAllCartById(userId string)
+	DeleteOneProduct(id string)
 }
 
 type ProductRepository interface {
@@ -19,4 +21,6 @@ type ProductRepository interface {
 	SaveToCart(ctx context.Context, data entities.Cart) (entities.Cart, error)
 	FindOne(ctx context.Context, id string) entities.ProductEntity
 	FindByUserId(ctx context.Context, userId string) []entities.Cart
+	DeleteAllCartById(ctx context.Context, userId string)
+	DeleteOneProductCart(ctx context.Context, id string)
 }

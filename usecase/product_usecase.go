@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 	"errors"
-	"fmt"
 	gonanoid "github.com/matoous/go-nanoid/v2"
 	"synapsis-test-be/contract"
 	"synapsis-test-be/entities"
@@ -30,7 +29,6 @@ func (p productUseCase) FindAll() []entities.ProductEntity {
 func (p *productUseCase) FindByCategory(category string) []entities.ProductEntity {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
-	fmt.Print(category)
 
 	return p.product.FindByCategory(ctx, category)
 }
@@ -67,4 +65,17 @@ func (p *productUseCase) FindByUserId(userId string) []entities.Cart {
 	defer cancel()
 
 	return p.product.FindByUserId(ctx, userId)
+}
+
+func (p *productUseCase) DeleteAllCartById(userId string) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+	p.product.DeleteAllCartById(ctx, userId)
+}
+
+func (p *productUseCase) DeleteOneProduct(id string) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+	p.product.DeleteOneProductCart(ctx, id)
 }

@@ -69,3 +69,14 @@ func (p *productRepository) FindByUserId(ctx context.Context, userId string) []e
 	return results
 
 }
+
+func (p *productRepository) DeleteAllCartById(ctx context.Context, userId string) {
+	err := p.db.Table("shopping_cart").WithContext(ctx).Where("user_id=?", userId).Delete(entities.Cart{}).Error
+	utilities.ErrorResponseWeb(err, 404)
+
+}
+
+func (p *productRepository) DeleteOneProductCart(ctx context.Context, id string) {
+	err := p.db.Table("shopping_cart").WithContext(ctx).Where("id=?", id).Delete(entities.Cart{}).Error
+	utilities.ErrorResponseWeb(err, 404)
+}

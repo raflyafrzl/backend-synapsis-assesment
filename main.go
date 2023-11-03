@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/joho/godotenv"
 	"gorm.io/gorm"
@@ -35,6 +34,12 @@ func main() {
 	r.Use(middlewares.RecoveryMiddleware)
 	r.Route("/api/customers", customerController.Route)
 	r.Route("/api/products", productController.Route)
-	fmt.Print("Server running on port ", os.Getenv("PORT"))
-	http.ListenAndServe(os.Getenv("PORT"), r)
+
+	r.Get("/", func(writer http.ResponseWriter, request *http.Request) {
+		writer.Header().Set("Content-Type", "application/json")
+
+		writer.Write([]byte("test"))
+	})
+
+	http.ListenAndServe(":9000", r)
 }

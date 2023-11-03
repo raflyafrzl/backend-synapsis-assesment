@@ -26,10 +26,14 @@ func NewProductController(product *contract.ProductUseCase) *ProductController {
 
 func (p *ProductController) Route(r chi.Router) {
 
-	r.Get("/{category}", p.Get)
+	r.Group(func(r chi.Router) {
+		r.Get("/{category}", p.Get)
+		r.With(middlewares.AuthMiddleware).Delete("/", p.DeleteProductInCart)
+		r.With(middlewares.AuthMiddleware).Post("/cart", p.AddToCart)
+		r.With(middlewares.AuthMiddleware).Get("/list", p.ListCart)
+		r.With(middlewares.AuthMiddleware).Get("/checkout", p.Checkout)
+	})
 
-	r.With(middlewares.AuthMiddleware).Post("/cart", p.AddToCart)
-	r.With(middlewares.AuthMiddleware).Get("/list", p.ListCart)
 }
 
 func (p *ProductController) Get(w http.ResponseWriter, r *http.Request) {
@@ -110,4 +114,45 @@ func (p *ProductController) ListCart(w http.ResponseWriter, r *http.Request) {
 	response, _ := json.Marshal(rawResponse)
 	w.Write(response)
 
+}
+
+func (p *ProductController) DeleteProductInCart(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	var raw []byte
+	var auth model.AuthUserModel
+	var requestCtx context.Context = r.Context()
+	var id string = r.URL.Query().Get("id")
+
+	raw, _ = json.Marshal(requestCtx.Value("auth"))
+	_ = json.Unmarshal(raw, &auth)
+	p.product.DeleteOneProduct(id)
+	var rawResponse model.ResponseWebSuccess = model.ResponseWebSuccess{
+		StatusCode: 200,
+		Status:     "success",
+		Message:    "Success deleted all product in cart",
+		Data:       []string{},
+	}
+	response, _ := json.Marshal(rawResponse)
+	w.Write(response)
+}
+
+func (p *ProductController) Checkout(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	var raw []byte
+	var auth model.AuthUserModel
+	var requestCtx context.Context = r.Context()
+
+	raw, _ = json.Marshal(requestCtx.Value("auth"))
+	_ = json.Unmarshal(raw, &auth)
+	p.product.DeleteAllCartById(auth.Id)
+	var rawResponse model.ResponseWebSuccess = model.ResponseWebSuccess{
+		StatusCode: 200,
+		Status:     "success",
+		Message:    "Success checkouts product in cart",
+		Data:       []string{},
+	}
+	response, _ := json.Marshal(rawResponse)
+	w.Write(response)
 }
